@@ -9,19 +9,18 @@ down trees and perhaps carve logs into planks.
 
 Setup:
 
-    I'm currently linking the pz_chainsaw_mod/chainsaw/ directory into the
+I'm currently linking the pz_chainsaw_mod/chainsaw/ directory into the
 media/lua/client/ directory in the steam PZ dir.
 (~/.steam/steam/SteamApps/common/ProjectZomboid/projectzomboid/media/lua/client/)
 
-    I'm also linking scripts/chainsaw.txt into <steam
-dir>/media/scripts/
+I'm also linking scripts/chainsaw.txt into <steam dir>/media/scripts/
 
 e.g.
 ln -s ~/dev/pz_chainsaw_mod/chainsaw/
-~/.steam/steam/SteamApps/common/ProjectZomboid/projectzomboid/media/lua/client/chainsaw/
+    ~/.steam/steam/SteamApps/common/ProjectZomboid/projectzomboid/media/lua/client/chainsaw/
 
 ln -s ~/dev/pz_chainsaw_mod/scripts/chainsaw.txt
-~/.steam/steam/SteamApps/common/ProjectZomboid/projectzomboid/media/scripts/chainsaw.txt
+    ~/.steam/steam/SteamApps/common/ProjectZomboid/projectzomboid/media/scripts/chainsaw.txt
 
 Ideas:
 - chop logs on the ground into planks on the ground
