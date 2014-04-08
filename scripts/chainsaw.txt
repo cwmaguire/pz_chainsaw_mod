@@ -9,6 +9,6 @@ module chainsaw {
     AimingMod = 1.0,
     IsAimedFirearm = TRUE,
     DisplayName = Chainsaw,
-    Icon = axe
+    Icon = Axe
   }
 }
