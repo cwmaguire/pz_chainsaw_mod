@@ -1,0 +1,14 @@
+module chainsaw {
+	imports{
+		Base
+	}
+
+  item Chainsaw {
+    Weight = 6,
+    Type = Weapon,
+    AimingMod = 1.0,
+    IsAimedFirearm = TRUE,
+    DisplayName = Chainsaw,
+    Icon = axe
+  }
+}
