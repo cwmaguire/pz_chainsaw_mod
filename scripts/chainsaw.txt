@@ -4,7 +4,6 @@ module chainsaw {
   }
 
   item Chainsaw {
-    /* AmmoType = Gasoline / Petrol */
     Categories = Axe,
     ConditionLowerChanceOneIn = 50,
     ConditionMax = 15,
@@ -12,13 +11,13 @@ module chainsaw {
     DisplayName = Chainsaw,
     DoorDamage = 150,
     HitAngleMod = -30,
-    Icon = Axe
+    Icon = Axe,
     IdleAnim = Idle_Weapon2,
     KnockBackOnNoDeath = TRUE,
     KnockdownMod = 3,
     MaxDamage = 2.5,
     MaxHitCount = 2,
-    MaxRange = 1.2,
+    MaxRange = 1.2,w
     MinAngle = 0.2,
     MinDamage = 1,
     MinimumSwingTime = 1.5,
@@ -27,7 +26,7 @@ module chainsaw {
     RunAnim = Run_Weapon2,
     SoundVolume = 100,
     SplatBloodOnNoDeath = TRUE,
-    SplatNumber = 3
+    SplatNumber = 3,
     SplatSize = 8,
     SubCategory = Swinging,
     SwingAmountBeforeImpact = 0.001,
