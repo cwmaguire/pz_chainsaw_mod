@@ -28,19 +28,24 @@ local function isChainsawEquipped()
   local item = player:getPrimaryHandItem()
 end
 
-Chainsaw.chainsawPlayCheckSound = function()
+Chainsaw.playCheckSound = function()
   print("chainsawPlayCheckSound called with SoundName: check")
   getSoundManager():PlaySound("check", false, 1.0)
 end
 
+Chainsaw.playIdleSound = function()
+  print("chainsawPlayCheckSound called with SoundName: check")
+  getSoundManager():PlaySound("chainsaw_idle", false, 1.0)
+end
+
 Chainsaw.onTick = function()
   Chainsaw.tick = Chainsaw.tick + 1
-  if Chainsaw.tick % 60 == 0 then
+  if Chainsaw.tick % 120 == 0 then
     print("chainsawPlayCheckSound called with SoundName: check")
-    getSoundManager():PlaySound("check", false, 1.0)
+    Chainsaw.playIdleSound()
   end
 end
 
 Events.OnKeyPressed.Add(Chainsaw.addChainsaw)
-Events.OnEquipPrimary.Add(Chainsaw.chainsawPlayCheckSound)
+Events.OnEquipPrimary.Add(Chainsaw.playCheckSound)
 Events.OnTick.Add(Chainsaw.onTick)
