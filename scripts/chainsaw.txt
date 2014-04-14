@@ -40,9 +40,4 @@ module chainsaw {
     WeaponWeight = 4,
     Weight = 4,
   }
-
-  trigger OnEquipPrimary
-  {
-    LuaCall("", "print", ""\LuaCall\"")
-  }
 }

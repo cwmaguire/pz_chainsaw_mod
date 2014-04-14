@@ -23,29 +23,51 @@ Chainsaw.addChainsaw = function(keyPressed)
   end
 end
 
-local function isChainsawEquipped()
+Chainsaw.isChainsawEquipped = function()
   local player = getPlayer()
   local item = player:getPrimaryHandItem()
+  if item == nil then
+    print("Chainsaw.isChainsawEquipped: Item is nil")
+  elseif item:getDisplayName() == "Chainsaw" then
+    print("Chainsaw.isChainsawEquipped: Item desc is \"Chainsaw\"")
+  elseif item:getDisplayName() == nil then
+    print("Chainsaw.isChainsawEquipped: Item desc is null")
+  else
+    print("Chainsaw.isChainsawEquipped: Item desc ~= \"Chainsaw\"")
+    print("Chainsaw.isChainsawEquipped: Item desc == "..item:getDisplayName())
+  end
+  if item ~= nil and item:getDisplayName() == "Chainsaw" then
+    print("Chainsaw.isChainsawEquipped: Item is not nil and desc = \"Chainsaw\"")
+    return true
+  else
+    return false
+  end
 end
 
-Chainsaw.playCheckSound = function()
-  print("chainsawPlayCheckSound called with SoundName: check")
-  getSoundManager():PlaySound("check", false, 1.0)
+Chainsaw.onEquipPrimary = function()
+  print("Chainsaw.onEquipPrimary")
+  if Chainsaw.isChainsawEquipped() then
+    print("Chainsaw.onEquipPrimary: chainsaw is equipped")
+    Chainsaw.tick = 0
+    Chainsaw.playIdleSound()
+  else
+    print("Chainsaw.onEquipPrimary: chainsaw is not equipped")
+  end
 end
 
 Chainsaw.playIdleSound = function()
-  print("chainsawPlayCheckSound called with SoundName: check")
+  print("Chainsaw.playIdleSound: playing idle sound")
   getSoundManager():PlaySound("chainsaw_idle", false, 1.0)
 end
 
 Chainsaw.onTick = function()
   Chainsaw.tick = Chainsaw.tick + 1
-  if Chainsaw.tick % 120 == 0 then
-    print("chainsawPlayCheckSound called with SoundName: check")
+  if Chainsaw.tick % 120 == 0 and Chainsaw.isChainsawEquipped() then
+    print("Chainsaw.onTick: chainsaw is equipped; playing idle sound")
     Chainsaw.playIdleSound()
   end
 end
 
 Events.OnKeyPressed.Add(Chainsaw.addChainsaw)
-Events.OnEquipPrimary.Add(Chainsaw.playCheckSound)
+Events.OnEquipPrimary.Add(Chainsaw.onEquipPrimary)
 Events.OnTick.Add(Chainsaw.onTick)
