@@ -23,35 +23,22 @@ Chainsaw.addChainsaw = function(keyPressed)
   end
 end
 
-Chainsaw.isChainsawEquipped = function()
+Chainsaw.setIsChainsawEquipped = function()
   local player = getPlayer()
   local item = player:getPrimaryHandItem()
-  if item == nil then
-    print("Chainsaw.isChainsawEquipped: Item is nil")
-  elseif item:getDisplayName() == "Chainsaw" then
-    print("Chainsaw.isChainsawEquipped: Item desc is \"Chainsaw\"")
-  elseif item:getDisplayName() == nil then
-    print("Chainsaw.isChainsawEquipped: Item desc is null")
-  else
-    print("Chainsaw.isChainsawEquipped: Item desc ~= \"Chainsaw\"")
-    print("Chainsaw.isChainsawEquipped: Item desc == "..item:getDisplayName())
-  end
   if item ~= nil and item:getDisplayName() == "Chainsaw" then
-    print("Chainsaw.isChainsawEquipped: Item is not nil and desc = \"Chainsaw\"")
-    return true
+    Chainsaw.isChainsawEquipped = true
   else
-    return false
+    Chainsaw.isChainsawEquipped = false
   end
 end
 
 Chainsaw.onEquipPrimary = function()
-  print("Chainsaw.onEquipPrimary")
-  if Chainsaw.isChainsawEquipped() then
-    print("Chainsaw.onEquipPrimary: chainsaw is equipped")
+  Chainsaw.setIsChainsawEquipped()
+  if Chainsaw.isChainsawEquipped then
     Chainsaw.tick = 0
+    Chainsaw.isChainsawEquipped = true
     Chainsaw.playIdleSound()
-  else
-    print("Chainsaw.onEquipPrimary: chainsaw is not equipped")
   end
 end
 
@@ -62,7 +49,7 @@ end
 
 Chainsaw.onTick = function()
   Chainsaw.tick = Chainsaw.tick + 1
-  if Chainsaw.tick % 120 == 0 and Chainsaw.isChainsawEquipped() then
+  if Chainsaw.tick % 120 == 0 and Chainsaw.isChainsawEquipped then
     print("Chainsaw.onTick: chainsaw is equipped; playing idle sound")
     Chainsaw.playIdleSound()
   end
