@@ -8,7 +8,10 @@
 -- 6) Have swining use fuel
 -- 7) Add fuel
 --
-local function addChainsaw(keyPressed)
+
+Chainsaw = {}
+
+Chainsaw.addChainsaw = function(keyPressed)
   if keyPressed == Keyboard.KEY_INSERT then
     print("INSERT pressed: adding chainsaw")
     local player = getPlayer()
@@ -24,10 +27,12 @@ local function isChainsawEquipped()
   local item = player:getPrimaryHandItem()
 end
 
-local function chainsawPlaySound(soundName)
-  print("chainsawPlaySound called with SoundName: "..soundName)
-  PlaySound(soundName, false, 0.0, 1.0)
-  return true
+Chainsaw.chainsawPlayCheckSound = function()
+  print("chainsawPlayCheckSound called with SoundName: check")
+  getSoundManager():PlaySound("check", false, 1.0)
 end
 
-Events.OnKeyPressed.Add(addChainsaw)
+
+
+Events.OnKeyPressed.Add(Chainsaw.addChainsaw)
+Events.OnEquipPrimary.Add(Chainsaw.chainsawPlayCheckSound)

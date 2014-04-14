@@ -41,26 +41,8 @@ module chainsaw {
     Weight = 4,
   }
 
-  customtrigger UseGas
-  {
-    UseGas.TimeSinceLastRan(1.0),
-    /* TODO figure out how to latch onto the players location */
-    /* This is a sound players will here */
-    World.PlaySoundEffect("firealarm", <player position?>, false, 0.0, 30, 0.6, false);
-
-    /* This is a noise the zombies will here */
-    /* World.PlayWorldSound(TutorialStovePosition, 40, 40); */
-  }
-
-  script SetupUseGasTrigger
-  {
-    LuaCall("", "chainsawPlaySound", "check")
-  }
-
   trigger OnEquipPrimary
   {
     LuaCall("", "print", ""\LuaCall\"")
-    /* call SetUseGasTrigger */
-    call SetupUseGasTrigger
   }
 }
