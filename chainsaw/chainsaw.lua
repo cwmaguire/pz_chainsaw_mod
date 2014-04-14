@@ -19,4 +19,15 @@ local function addChainsaw(keyPressed)
   end
 end
 
+local function isChainsawEquipped()
+  local player = getPlayer()
+  local item = player:getPrimaryHandItem()
+end
+
+local function chainsawPlaySound(soundName)
+  print("chainsawPlaySound called with SoundName: "..soundName)
+  PlaySound(soundName, false, 0.0, 1.0)
+  return true
+end
+
 Events.OnKeyPressed.Add(addChainsaw)
