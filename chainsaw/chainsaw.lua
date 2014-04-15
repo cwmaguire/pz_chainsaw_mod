@@ -1,13 +1,13 @@
 -- What do I want to do?
 --
--- 1) Have the chainsaw idle
--- 2) Play an idle noise
+-- 1) Have the chainsaw idle -- done
+-- 2) Play an idle noise -- done
 -- 3) Have the chainsaw swing
--- 4) Have a swinging revving noise
+-- 4) Have a swinging revving noise -- done
 -- 5) Have idling use fuel
 -- 6) Have swining use fuel
--- 7) Add fuel
---
+-- 7) Add fuel -- in progress
+-- 8) Figure out how to hook into the timed actions
 
 Chainsaw = {}
 Chainsaw.tick = 0;
