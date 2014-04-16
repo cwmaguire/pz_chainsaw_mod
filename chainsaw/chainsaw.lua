@@ -54,7 +54,7 @@ Chainsaw.getChainsawsNotFull = function(player)
 
   for item in player:getInventory():getItems() do
     if Chainsaw.isChainsaw(item) and not Chainsaw.isFull(item) then
-      item.setDisplayName("Chainsaw [" .. item.getAge() .."]")
+      item.setDisplayName(Chainsaw.chainsawName .. " [" .. item.getAge() .."]")
       table.insert(chainsaws, equippedItem)
     end
   end
@@ -102,7 +102,7 @@ end
 
 Chainsaw.setFuel = function(chainsaw, fuel)
   chainsaw:setAge(fuel)
-  chainsaw:setDisplayName("Chainsaw [" .. fuel .. "]")
+  chainsaw:setDisplayName(Chainsaw.chainsawName .. " [" .. fuel .. "]")
 end
 
 Chainsaw.setPetrolCanFuel = function(petrolCan, fuel)
@@ -113,7 +113,7 @@ end
 Chainsaw.setIsChainsawEquipped = function()
   local player = getPlayer()
   local item = player:getPrimaryHandItem()
-  if item ~= nil and item:getDisplayName() == "Chainsaw" then
+  if item ~= nil and Chainsaw.isChainsaw(item) then
     Chainsaw.isChainsawEquipped = true
   else
     Chainsaw.isChainsawEquipped = false
@@ -127,7 +127,7 @@ Chainsaw.onEquipPrimary = function()
     Chainsaw.tick = 0
     Chainsaw.isChainsawEquipped = true
     Chainsaw.playIdleSound()
-    Chainsaw.ensureUses()
+    Chainsaw.ensureAge()
   end
 end
 

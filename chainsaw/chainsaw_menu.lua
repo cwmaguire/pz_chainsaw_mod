@@ -20,7 +20,8 @@ ChainsawMenu.doChainsawMenu = function(player, context, worldObjects)
     return
   end
 
-  local fillOption = context:addOption("Fill Chainsaw ...", worldObjects, nil)
+  local fillText = "Fill " .. Chainsaw.chainsawName .. "..."
+  local fillOption = context:addOption(fillText, worldObjects, nil)
 
   local chainsawMenu = ISContextMenu:getNew(context)
   context:addSubMenu(fillOption, chainsawMenu)
@@ -37,7 +38,7 @@ ChainsawMenu.doChainsawMenu = function(player, context, worldObjects)
 
   if #chainsaws > 0 then
     for _, chainsaw in pairs(chainsaws) do
-      local chainText = "Chainsaw [" .. chainsaw:getAge() .. "] ...";
+      local chainText = Chainsaw.chainsawName .. " [" .. chainsaw:getAge() .. "] ..."
       local chainOption = chainsawMenu:addOption(chainText, worldObjects, nil)
 
       local invChainFuelMenu = ISContextMenu:getNew(chainsawMenu)
@@ -50,7 +51,7 @@ end
 
 ChainsawMenu.addPetrolCanMenus = function(menuContext, player, chainsaw, petrolCans)
   for _, petrolCan in pairs(petrolCans) do
-    local petrolCanText = "Fuel [" .. petrolCan:getAge() .. "]";
+    local petrolCanText = Chainsaw.petrolCanName .. " [" .. petrolCan:getAge() .. "]"
     menuContext:addOption(petrolCanText, player, Chainsaw.fillChainsaw, chainsaw, petrolCan)
   end
 end
