@@ -35,16 +35,16 @@ Chainsaw.addChainsaw = function(keyPressed)
 end
 
 Chainsaw.isChainsaw = function(item)
-  return string.find(item.getDisplayName(), Chainsaw.chainsawName)
+  return string.find(item:getName(), Chainsaw.chainsawName)
 end
 
 Chainsaw.isFull = function(chainsaw)
   local twentyMinutes = 20 * 60
-  return chainsaw.getAge() < twentyMinutes
+  return chainsaw:getAge() < twentyMinutes
 end
 
 Chainsaw.getChainsawsNotFull = function(player)
-  local equippedItem = player.getPrimaryHandItem()
+  local equippedItem = player:getPrimaryHandItem()
   local equippedChainsaw
   local chainsaws = {}
   if Chainsaw.isChainsaw(equippedItem) and
@@ -54,7 +54,7 @@ Chainsaw.getChainsawsNotFull = function(player)
 
   for item in player:getInventory():getItems() do
     if Chainsaw.isChainsaw(item) and not Chainsaw.isFull(item) then
-      item.setDisplayName(Chainsaw.chainsawName .. " [" .. item.getAge() .."]")
+      item:setName(Chainsaw.chainsawName .. " [" .. item:getAge() .."]")
       table.insert(chainsaws, equippedItem)
     end
   end
@@ -63,7 +63,7 @@ Chainsaw.getChainsawsNotFull = function(player)
 end
 
 Chainsaw.isPetrolCan = function(item)
-  return string.find(item.getDisplayName(), "Gas Can")
+  return string.find(item:getName(), "Gas Can")
 end
 
 Chainsaw.isPetrolCanEmpty = function(petrolCan)
@@ -75,7 +75,7 @@ Chainsaw.getPetrolCansNotEmpty = function(player)
   for item in player:getInventory():getItems() do
     if Chainsaw.isPetrolCan(item) and
       not Chainsaw.isPetrolCanEmpty(item) then
-      item.setDisplayName("Gas Can [".. item.getAge() .."]")
+      item:setName("Gas Can [".. item:getAge() .."]")
       table.insert(petrolCans, equippedItem)
     end
   end
@@ -102,12 +102,12 @@ end
 
 Chainsaw.setFuel = function(chainsaw, fuel)
   chainsaw:setAge(fuel)
-  chainsaw:setDisplayName(Chainsaw.chainsawName .. " [" .. fuel .. "]")
+  chainsaw:setName(Chainsaw.chainsawName .. " [" .. fuel .. "]")
 end
 
 Chainsaw.setPetrolCanFuel = function(petrolCan, fuel)
   petrolCan:setAge(fuel)
-  petrolCan:setDisplayName(ChainSaw.petrolCanName .. "[" .. fuel .. "]")
+  petrolCan:setName(ChainSaw.petrolCanName .. "[" .. fuel .. "]")
 end
 
 Chainsaw.setIsChainsawEquipped = function()
@@ -147,7 +147,7 @@ Chainsaw.use = function()
   local player = getPlayer()
   local item = player:getPrimaryHandItem()
   item:setAge(item:getAge() - 1.0)
-  print("\"Using\" Chainsaw (lowering age)")
+  print("\"Using\" Chainsaw (lowering age)" .. item:getAge())
 end
 
 Chainsaw.onTick = function()
