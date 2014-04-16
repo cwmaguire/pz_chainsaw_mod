@@ -44,15 +44,20 @@ Chainsaw.isFull = function(chainsaw)
 end
 
 Chainsaw.getChainsawsNotFull = function(player)
+  local playerInv = player:getInventory()
+  local playerItems = playerInv:getItems()
   local equippedItem = player:getPrimaryHandItem()
   local equippedChainsaw
   local chainsaws = {}
+
   if Chainsaw.isChainsaw(equippedItem) and
     not Chainsaw.isFull(equippedItem) then
     equippedChainsaw = equippedItem
   end
 
-  for item in player:getInventory():getItems() do
+	for i = 0, playerItems:size() - 1 do
+		local item = playerItems:get(i);
+
     if Chainsaw.isChainsaw(item) and not Chainsaw.isFull(item) then
       item:setName(Chainsaw.chainsawName .. " [" .. item:getAge() .."]")
       table.insert(chainsaws, equippedItem)
@@ -71,8 +76,12 @@ Chainsaw.isPetrolCanEmpty = function(petrolCan)
 end
 
 Chainsaw.getPetrolCansNotEmpty = function(player)
+  playerItems = player:getInventory():getItems()
   local petrolCans = {}
-  for item in player:getInventory():getItems() do
+
+	for i = 0, playerItems:size() - 1 do
+		local item = playerItems:get(i);
+
     if Chainsaw.isPetrolCan(item) and
       not Chainsaw.isPetrolCanEmpty(item) then
       item:setName("Gas Can [".. item:getAge() .."]")

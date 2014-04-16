@@ -2,26 +2,31 @@ require 'chainsaw/chainsaw.lua'
 
 ChainsawMenu = {};
 
-ChainsawMenu.doChainsawMenu = function(player, context, worldObjects)
-  local playerInv = getSpecificPlayer(player):getInventory();
+ChainsawMenu.doChainsawMenu = function(playerNum, context, worldObjects)
+  print("Chainsaw menu")
+  local player = getSpecificPlayer(playerNum)
+  local playerInv = player:getInventory();
   local equippedChainsaw
   local chainsaws
   local petrolCans
 
-  equippedChainsaw, invChainsaws = Chainsaw.getChainsawsNotFull(player)
+  equippedChainsaw, chainsaws = Chainsaw.getChainsawsNotFull(player)
 
   if not equippedChainsaw and #chainsaws == 0 then
+    print("No equipped chainsaw or inventory chainsaws")
     return
   end
 
   petrolCans = Chainsaw.getPetrolCansNotEmpty(player)
 
   if #petrolCans == 0 then
+    print("No petrol cans in inventory")
     return
   end
 
   local fillText = "Fill " .. Chainsaw.chainsawName .. "..."
   local fillOption = context:addOption(fillText, worldObjects, nil)
+  print("Created fill menu: " .. fillText)
 
   local chainsawMenu = ISContextMenu:getNew(context)
   context:addSubMenu(fillOption, chainsawMenu)
@@ -55,3 +60,5 @@ ChainsawMenu.addPetrolCanMenus = function(menuContext, player, chainsaw, petrolC
     menuContext:addOption(petrolCanText, player, Chainsaw.fillChainsaw, chainsaw, petrolCan)
   end
 end
+
+Events.OnFillWorldObjectContextMenu.Add(ChainsawMenu.doChainsawMenu);
