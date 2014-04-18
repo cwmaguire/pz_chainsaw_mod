@@ -4,7 +4,7 @@
 -- 2) Play an idle noise -- done
 -- 3) Have the chainsaw swing
 -- 4) Have a swinging revving noise -- done
--- 5) Have idling use fuel
+-- 5) Have idling use fuel -- done
 -- 6) Have swining use fuel
 -- 7) Add fuel -- in progress
 -- 8) Figure out how to hook into the timed actions
@@ -24,47 +24,132 @@ end
 
 Chainsaw.addChainsaw = function(keyPressed)
   if keyPressed == Keyboard.KEY_INSERT then
-    print("INSERT pressed: adding chainsaw")
+    print("INSERT pressed: adding inventory")
     local player = getPlayer()
     local inv = player:getInventory()
 
     inv:AddItem("chainsaw.Chainsaw")
-    inv:AddItem("Base.Axe")
     inv:AddItem("Base.PetrolCan")
+
+    local equippedChainsaw
+    local chainsaws
+    equippedChainsaw, chainsaws = Chainsaw.getChainsaws(player)
+
+    Chainsaw.initItem(equippedChainsaw)
+    for _, chainsaw in chainsaws do
+      Chainsaw.initItem(chainsaw)
+    end
+  end
+
+  if keyPressed == Keyboard.KEY_HOME then
+
   end
 end
 
 Chainsaw.isChainsaw = function(item)
+  local result = string.find(item:getName(), Chainsaw.chainsawName)
+  local index
+  if not result then
+    index = "nil"
+  else
+    index = result
+  end
+  print("Looking for " .. Chainsaw.chainsawName .. " in " ..
+        item:getName() .. " and getting: " .. index)
   return string.find(item:getName(), Chainsaw.chainsawName)
 end
 
 Chainsaw.isFull = function(chainsaw)
-  local twentyMinutes = 20 * 60
-  return chainsaw:getAge() < twentyMinutes
+  return chainsaw:getAge() >= Chainsaw.chainsawFuelLimit
 end
 
-Chainsaw.getChainsawsNotFull = function(player)
+Chainsaw.initItem = function(item)
+    Chainsaw.ensureAge(item)
+    Chainsaw.ensureName(item)
+end
+
+Chainsaw.ensureAge = function(item)
+  if not item:getAge() then
+    print("Chainsaw.ensureAge: Item " .. item:getName() .. " does not have an age")
+    if Chainsaw.isChainsaw(item) then
+      print("Chainsaw.ensureAge: Setting chainsaw fuel to limit")
+      item:setAge(Chainsaw.chainsawFuelLimit)
+    elseif Chainsaw.isPetrolCan(item) then
+      print("Chainsaw.ensureAge: Setting petrol can fuel to limit")
+      item:setAge(Chainsaw.petrolCanFuel)
+    end
+  else
+    print("Chainsaw.ensureAge: Item " .. item:getName() .. "has an age: " .. item:getAge())
+  end
+end
+
+Chainsaw.ensureName = function(item)
+  if not Chainsaw.hasAgeName(item) then
+    print("Chainsaw.ensureName: Chainsaw doesn't have an age name")
+    Chainsaw.setAgeName(item)
+  else
+    print("Chainsaw.ensureName: Chainsaw " .. item:getName() .. " already has age name")
+  end
+end
+
+Chainsaw.hasAgeName = function(item)
+  return string.find(item:getName(), "%[%d+%]")
+end
+
+Chainsaw.setAgeName = function(item)
+  print("Chainsaw.setAgeName: Setting age name for " .. item:getName() .. " with age: " .. item:getAge())
+
+  if Chainsaw.isChainsaw(item) then
+    item:setName(Chainsaw.chainsawName .. " [" .. item:getAge() .."]")
+    print("Chainsaw.setAgeName: Chainsaw name is now: " .. item:getName())
+  elseif Chainsaw.isPetrolCan(item) then
+    item:setName(Chainsaw.petrolCanName .. " [" .. item:getAge() .. "]")
+    print("Chainsaw.setAgeName: Petrol can name is now: " .. item:getName())
+  end
+
+end
+
+Chainsaw.getChainsaws = function(player)
   local playerInv = player:getInventory()
   local playerItems = playerInv:getItems()
   local equippedItem = player:getPrimaryHandItem()
   local equippedChainsaw
   local chainsaws = {}
 
-  if Chainsaw.isChainsaw(equippedItem) and
-    not Chainsaw.isFull(equippedItem) then
+  if equippedItem and Chainsaw.isChainsaw(equippedItem) then
     equippedChainsaw = equippedItem
   end
 
 	for i = 0, playerItems:size() - 1 do
-		local item = playerItems:get(i);
-
-    if Chainsaw.isChainsaw(item) and not Chainsaw.isFull(item) then
-      item:setName(Chainsaw.chainsawName .. " [" .. item:getAge() .."]")
-      table.insert(chainsaws, equippedItem)
+		item = playerItems:get(i)
+    Chainsaw.initItem(item)
+    if Chainsaw.isChainsaw(item) then
+      table.insert(chainsaws, item)
+    else
+      print("Not using " .. item:getName() .. " with age " .. item:getAge())
     end
   end
 
-  return equippedChainsaw, chainsaws
+end
+
+Chainsaw.getChainsawsNotFull = function(player)
+  local equippedChainsaw
+  local chainsaws
+  local fullChainsaws = {}
+
+  chainsaws, equippedChainsaw = Chainsaw.getChainsaws(player)
+
+  if equippedChainsaw and Chainsaw.isFull(equippedChainsaw) then
+    equippedChainsaw = nil
+  end
+
+  for _, chainsaw in chainsaws do
+    if not Chainsaw.isFull(chainsaw) then
+      table.insert(fullChainsaws, item)
+    end
+  end
+
+  return equippedChainsaw, fullChainsaws
 end
 
 Chainsaw.isPetrolCan = function(item)
@@ -72,7 +157,7 @@ Chainsaw.isPetrolCan = function(item)
 end
 
 Chainsaw.isPetrolCanEmpty = function(petrolCan)
-  return petrolCan.getAge() > 0
+  return petrolCan:getAge() <= 0
 end
 
 Chainsaw.getPetrolCansNotEmpty = function(player)
@@ -111,12 +196,12 @@ end
 
 Chainsaw.setFuel = function(chainsaw, fuel)
   chainsaw:setAge(fuel)
-  chainsaw:setName(Chainsaw.chainsawName .. " [" .. fuel .. "]")
+  Chainsaw.setAgeName(chainsaw)
 end
 
 Chainsaw.setPetrolCanFuel = function(petrolCan, fuel)
   petrolCan:setAge(fuel)
-  petrolCan:setName(ChainSaw.petrolCanName .. "[" .. fuel .. "]")
+  Chainsaw.setAgeName(petrolCan)
 end
 
 Chainsaw.setIsChainsawEquipped = function()
@@ -136,19 +221,11 @@ Chainsaw.onEquipPrimary = function()
     Chainsaw.tick = 0
     Chainsaw.isChainsawEquipped = true
     Chainsaw.playIdleSound()
-    Chainsaw.ensureAge()
-  end
-end
-
-Chainsaw.ensureAge = function()
-  local item = getPlayer():getPrimaryHandItem()
-  if item:getAge() <= 0 then
-    item:setAge(100.0)
   end
 end
 
 Chainsaw.playIdleSound = function()
-  print("Chainsaw.playIdleSound: playing idle sound")
+  print("Chainsaw.playIdleSound: playing silly, fill-in idle sound")
   getSoundManager():PlaySound("chainsaw_idle", false, 0.5)
 end
 
