@@ -3,9 +3,17 @@ pz_chainsaw_mod
 
 Project Zomboid chainsaw item mod
 
-I want to chop down trees with a chainsaw. My main priority is to get
-the functionality. I plan to consider sound and graphics after I can cut
-down trees and perhaps carve logs into planks.
+I want to chop down trees with a chainsaw. I've currently got a working
+chainsaw with silly sounds that can chop down trees and kill zombies.
+I'm currently (as of this commit date) working on getting fuel amounts
+and fuel filling menus working.
+
+Warning:
+
+BACK UP YOUR SAVE!
+
+I've mangled a bunch of saves so please back up any saves before using
+this.
 
 Setup:
 
