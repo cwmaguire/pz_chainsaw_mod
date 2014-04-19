@@ -39,6 +39,8 @@ Chainsaw.addChainsaw = function(keyPressed)
     local chainsaw = inv:AddItem("chainsaw.Chainsaw")
     local petrolCan = inv:AddItem("Base.PetrolCan")
 
+    chainsaw:setAge(Chainsaw.chainsawFuelLimit - 100)
+
     print("Chainsaw.addChainsaw: added chainsaw and petrol can")
 
     Chainsaw.initItem(chainsaw, Chainsaw.chainsawFuelLimit)
@@ -224,7 +226,7 @@ end
 Chainsaw.getChainsawsNotFull = function(player)
   local equippedChainsaw
   local chainsaws
-  local fullChainsaws = {}
+  local notFullChainsaws = {}
 
   equippedChainsaw, chainsaws = Chainsaw.getChainsaws(player)
 
@@ -244,7 +246,7 @@ Chainsaw.getChainsawsNotFull = function(player)
       if not Chainsaw.isFull(chainsaw) then
         print("Chainsaw.getChainsawsNotFull: " .. chainsaw:getName() ..
               " is not full")
-        table.insert(fullChainsaws, item)
+        table.insert(notFullChainsaws, chainsaw)
       elseif chainsaw then
         print("Chainsaw.getChainsawsNotFull: " .. chainsaw:getName() ..
               " is full")
@@ -256,7 +258,7 @@ Chainsaw.getChainsawsNotFull = function(player)
     end
   end
 
-  return equippedChainsaw, fullChainsaws
+  return equippedChainsaw, notFullChainsaws
 end
 
 Chainsaw.isPetrolCan = function(item)
@@ -285,11 +287,36 @@ Chainsaw.getPetrolCansNotEmpty = function(player)
 end
 
 Chainsaw.fillChainsaw = function(player, chainsaw, petrolCan)
+  if player and player:getInventory() then
+    print("Chainsaw.fillChainsaw: got player with inventory")
+  end
+
+  if chainsaw and chainsaw:getName() then
+    print("Chainsaw.fillChainsaw: got chainsaw: " .. chainsaw:getName())
+  end
+
+  if petrolCan and petrolCan:getName() then
+    print("Chainsaw.fillChainsaw: got petrolCan: " .. petrolCan:getName())
+  end
+
   local chainsawFuel = Chainsaw.getFuel(chainsaw)
   local petrolCanFuel = Chainsaw.getPetrolCanFuel(petrolCan)
 
+  if not chainsawFuel or not petrolCanFuel then
+    print("Chainsaw.fillChainsaw: no chainsaw fuel or petrol can fuel")
+    return
+  else
+    if chainsawFuel then
+      print("Chainsaw.fillChainsaw: chainsaw fuel: " .. chainsawFuel)
+    end
+    if petrolCanFuel then
+      print("Chainsaw.fillChainsaw: petrolCanFuel fuel: " .. petrolCanFuel)
+    end
+  end
+
   local fuelNeeded = Chainsaw.chainsawFuelLimit - chainsawFuel
   local petrolLeft
+
   if fuelNeeded <= petrolCanFuel then
     fuelLeft = petrolCanFuel - fuelNeeded
     chainsawFuel = Chainsaw.chainsawFuelLimit
@@ -299,6 +326,24 @@ Chainsaw.fillChainsaw = function(player, chainsaw, petrolCan)
   end
   Chainsaw.setFuel(chainsaw, chainsawFuel)
   Chainsaw.setPetrolCanFuel(petrolCan, fuelLeft)
+end
+
+Chainsaw.getFuel = function(chainsaw)
+  if chainsaw and Chainsaw.isChainsaw(chainsaw) then
+    return chainsaw:getAge()
+  else
+    print("Chainsaw.getFuel: could not return chainsaw fuel: nil or not chainsaw")
+    return nil
+  end
+end
+
+Chainsaw.getPetrolCanFuel = function(petrolCan)
+  if petrolCan and Chainsaw.isPetrolCan(petrolCan) then
+    return petrolCan:getAge()
+  else
+    print("Chainsaw.getFuel: could not return petrol can fuel: nil or not petrol can")
+    return nil
+  end
 end
 
 Chainsaw.setFuel = function(chainsaw, fuel)
