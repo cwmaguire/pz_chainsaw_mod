@@ -43,11 +43,16 @@ ChainsawMenu.doChainsawMenu = function(playerNum, context, worldObjects)
 
   if #chainsaws > 0 then
     for _, chainsaw in pairs(chainsaws) do
-      local chainText = Chainsaw.chainsawName .. " [" .. chainsaw:getAge() .. "] ..."
-      local chainOption = chainsawMenu:addOption(chainText, worldObjects, nil)
+      if not chainsaw then
+        print("Chainsaw.doChainsawMenu: chainsaw is nil; <sigh>")
+        break
+      end
+      local chainOption = chainsawMenu:addOption(chainsaw:getName(), worldObjects, nil)
 
       local invChainFuelMenu = ISContextMenu:getNew(chainsawMenu)
       chainsawMenu:addSubMenu(chainOption, invChainFuelMenu)
+
+      -- TODO Check what is nil when we get here. Somethings breaking.
 
       Chainsaw.addPetrolCanMenus(invChainFuelMenu, player, chainsaw, petrolCans)
     end
