@@ -8,6 +8,24 @@
 
 ChainsawUtil = {};
 
+ChainsawUtil.printElements = function(table)
+  for k, v in pairs(table) do
+    if type(k) == "string" then
+      kString = k
+    else
+      kString = type(k)
+    end
+    if type(v) == "string" or type(v) == "number" then
+      vString = v
+    else
+      vString = type(v)
+    end
+    print("ChainsawUtil.printElementTypes: Key: " ..
+          kString ..
+          ", Value: " .. vString)
+  end
+end
+
 ChainsawUtil.checkPlayer = function()
   local player = getPlayer()
 

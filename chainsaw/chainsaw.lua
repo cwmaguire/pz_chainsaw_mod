@@ -103,6 +103,7 @@ Chainsaw.addChainsaw = function(keyPressed)
     print("Chainsaw.addChainsaw: init'd chainsaw and petrol can")
   elseif keyPressed == Keyboard.KEY_HOME then
     print("Chainsaw.addChainsaw: HOME key pressed")
+    ChainsawUtil.printElements(Keyboard)
   else
     print("Chainsaw.addChainsaw: Key pressed = " .. keyPressed)
     print("Chainsaw.addChainsaw: type of Keyboard is " .. type(Keyboard))
