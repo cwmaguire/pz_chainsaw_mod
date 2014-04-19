@@ -19,7 +19,7 @@ OnConnected
 OnConnectFailed
 OnContainerUpdate
 OnCreateLivingCharacter
-OnCreatePlayer
+OnCreatePlayer -- called before [OnGameStart, OnLoad], player is available with getPlayer(), no params
 OnCreateSurvivor
 OnCreateUI
 OnDawn
@@ -35,8 +35,8 @@ OnFETick
 OnFillContainer
 OnFillInventoryObjectContextMenu
 OnFillWorldObjectContextMenu
-OnGameBoot
-OnGameStart
+OnGameBoot -- When the game itself loads up to the main screen, no params (or all false)
+OnGameStart -- called after OnGameStart, before OnLoad, player is available with getPlayer(), no params
 OnGameTimeLoaded
 OnInitWorld
 OnIsoThumpableLoad
@@ -45,7 +45,7 @@ OnJoypadActivate
 OnJoypadActivateUI
 OnKeyKeepPressed
 OnKeyPressed
-OnLoad
+OnLoad -- called after OnGameStart, player is available with getPlayer(), no params
 OnLoadMapZones
 onLoadModDataFromServer
 OnLoginState

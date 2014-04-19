@@ -17,6 +17,8 @@
 -- 7) Add fuel -- in progress
 -- 8) Figure out how to hook into the timed actions
 
+require 'chainsaw/chainsaw_util.lua'
+
 Chainsaw = {}
 Chainsaw.tick = 0;
 Chainsaw.chainsawName = "Chainsaw"
@@ -28,6 +30,77 @@ do
 
   local oneHour = 60 * 60
   Chainsaw.petrolCanFuel = oneHour
+end
+
+Chainsaw.OnGameBoot = function(a, b, c, d, e)
+  print("Chainsaw.OnGameBoot")
+  ChainsawUtil.checkPlayer()
+  ChainsawUtil.examineParams()
+end
+
+Chainsaw.OnGameStart = function(a, b, c, d, e)
+  print("Chainsaw.OnGameStart")
+  ChainsawUtil.checkPlayer()
+  ChainsawUtil.examineParams()
+end
+
+Chainsaw.OnGameTimeLoaded = function(a, b, c, d, e)
+  print("Chainsaw.OnGameTimeLoaded")
+  ChainsawUtil.checkPlayer()
+  ChainsawUtil.examineParams()
+end
+
+Chainsaw.OnLoad = function(a, b, c, d, e)
+  print("Chainsaw.OnLoad")
+  ChainsawUtil.checkPlayer()
+  ChainsawUtil.examineParams()
+end
+
+Chainsaw.OnCreatePlayer = function(a, b, c, d, e)
+  print("Chainsaw.OnCreatePlayer")
+  ChainsawUtil.checkPlayer()
+  ChainsawUtil.examineParams()
+end
+
+Chainsaw.initInvItems = function(a, b, c, d, e)
+  local player = getPlayer()
+  local equippedChainsaw
+  local chainsaws
+
+  if player then
+    print("Chainsaw.initInvItems: player is loaded")
+  else
+    print("Chainsaw.initInvItems: player is nil")
+    return
+  end
+
+  print("Chainsaw.initInvItems: calling Chainsaw.getChainsaws(player)")
+
+  equippedChainsaw, chainsaws = Chainsaw.getChainsaws(player)
+
+  print("Chainsaw.initInvItems: Chainsaw.getChainsaws(player) returned")
+
+  if equippedChainsaw then
+    print("Chainsaw.initInvItems: " .. equippedChainsaw:getName())
+  else
+    print("Chainsaw.initInvItems: no equipped chainsaw")
+  end
+
+  if chainsaws then
+    print("Chainsaw.initInvItems: " .. #chainsaws .. " chainsaws found")
+  else
+    print("Chainsaw.initInvItems: no inventory chainsaw")
+  end
+
+  if equippedChainsaw then
+    Chainsaw.initItem(equippedChainsaw)
+  end
+
+  if chainsaws and #chainsaws > 0 then
+    for _, chainsaw in pairs(chainsaws) do
+      Chainsaw.initItem(chainsaw)
+    end
+  end
 end
 
 Chainsaw.addChainsaw = function(keyPressed)
@@ -47,36 +120,6 @@ Chainsaw.addChainsaw = function(keyPressed)
     Chainsaw.initItem(petrolCan, Chainsaw.petrolCanFuel)
 
     print("Chainsaw.addChainsaw: init'd chainsaw and petrol can")
-
-    print("Chainsaw.addChainsaw: calling Chainsaw.getChainsaws(player)")
-
-    local equippedChainsaw
-    local chainsaws
-    equippedChainsaw, chainsaws = Chainsaw.getChainsaws(player)
-
-    print("Chainsaw.addChainsaw: Chainsaw.getChainsaws(player) returned")
-
-    if equippedChainsaw then
-      print("Chainsaw.addChainsaw: " .. equippedChainsaw:getName())
-    else
-      print("Chainsaw.addChainsaw: no equipped chainsaw")
-    end
-
-    if chainsaws then
-      print("Chainsaw.addChainsaw: " .. #chainsaws .. " chainsaws found")
-    else
-      print("Chainsaw.addChainsaw: no inventory chainsaw")
-    end
-
-    if equippedChainsaw then
-      Chainsaw.initItem(equippedChainsaw)
-    end
-
-    if chainsaws and #chainsaws > 0 then
-      for _, chainsaw in pairs(chainsaws) do
-        Chainsaw.initItem(chainsaw)
-      end
-    end
   end
 
   if keyPressed == Keyboard.KEY_HOME then
@@ -121,6 +164,12 @@ Chainsaw.ensureAge = function(item, age)
   if age then
     print("Chainsaw.ensureAge called with age: " .. age)
     item:setAge(age)
+  elseif Chainsaw.hasAgeName(item) then
+    age = Chainsaw.getNameAge(item)
+    print("Chainsaw.ensureAge: setting age of " ..
+          item:getName() ..
+          " to " .. age .. " based on age in name")
+    item:setAge(age)
   elseif not item:getAge() then
     print("Chainsaw.ensureAge: Item " .. item:getName() .. " does not have an age")
     if Chainsaw.isChainsaw(item) then
@@ -149,6 +198,10 @@ end
 
 Chainsaw.hasAgeName = function(item)
   return string.find(item:getName(), "%[%d+%]")
+end
+
+Chainsaw.getNameAge = function(item)
+  return string.match(item:getName(), "%[(%d+)%]")
 end
 
 Chainsaw.setAgeName = function(item)
@@ -212,7 +265,6 @@ Chainsaw.getChainsaws = function(player)
     end
 
     if Chainsaw.isChainsaw(item) then
-      Chainsaw.initItem(item)
       table.insert(chainsaws, item)
     else
       print("Chainsaw.getChainsaws: Not using " .. item:getName() ..
@@ -278,7 +330,6 @@ Chainsaw.getPetrolCansNotEmpty = function(player)
 
     if Chainsaw.isPetrolCan(item) and
       not Chainsaw.isPetrolCanEmpty(item) then
-      Chainsaw.initItem(item)
       table.insert(petrolCans, item)
     end
   end
@@ -407,3 +458,8 @@ end
 Events.OnKeyPressed.Add(Chainsaw.addChainsaw)
 Events.OnEquipPrimary.Add(Chainsaw.onEquipPrimary)
 Events.OnTick.Add(Chainsaw.onTick)
+Events.OnGameBoot.Add(Chainsaw.OnGameBoot)
+Events.OnGameStart.Add(Chainsaw.OnGameStart)
+Events.OnGameTimeLoaded.Add(Chainsaw.OnGameTimeLoaded)
+Events.OnLoad.Add(Chainsaw.OnLoad)
+Events.OnCreatePlayer.Add(Chainsaw.OnCreatePlayer)
