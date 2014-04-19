@@ -32,40 +32,16 @@ do
   Chainsaw.petrolCanFuel = oneHour
 end
 
-Chainsaw.OnGameBoot = function(a, b, c, d, e)
-  print("Chainsaw.OnGameBoot")
-  ChainsawUtil.checkPlayer()
-  ChainsawUtil.examineParams()
-end
-
-Chainsaw.OnGameStart = function(a, b, c, d, e)
-  print("Chainsaw.OnGameStart")
-  ChainsawUtil.checkPlayer()
-  ChainsawUtil.examineParams()
-end
-
-Chainsaw.OnGameTimeLoaded = function(a, b, c, d, e)
-  print("Chainsaw.OnGameTimeLoaded")
-  ChainsawUtil.checkPlayer()
-  ChainsawUtil.examineParams()
-end
-
-Chainsaw.OnLoad = function(a, b, c, d, e)
+Chainsaw.OnLoad = function()
   print("Chainsaw.OnLoad")
-  ChainsawUtil.checkPlayer()
-  ChainsawUtil.examineParams()
-end
-
-Chainsaw.OnCreatePlayer = function(a, b, c, d, e)
-  print("Chainsaw.OnCreatePlayer")
-  ChainsawUtil.checkPlayer()
-  ChainsawUtil.examineParams()
-end
-
-Chainsaw.initInvItems = function(a, b, c, d, e)
   local player = getPlayer()
+  Chainsaw.initInvItems(player)
+end
+
+Chainsaw.initInvItems = function(player)
   local equippedChainsaw
   local chainsaws
+  local petrolCans
 
   if player then
     print("Chainsaw.initInvItems: player is loaded")
@@ -101,6 +77,11 @@ Chainsaw.initInvItems = function(a, b, c, d, e)
       Chainsaw.initItem(chainsaw)
     end
   end
+
+  local petrolCans = Chainsaw.getPetrolCans(player)
+  for _, petrolCan in pairs(petrolCans) do
+    Chainsaw.initItem(petrolCan)
+  end
 end
 
 Chainsaw.addChainsaw = function(keyPressed)
@@ -120,10 +101,13 @@ Chainsaw.addChainsaw = function(keyPressed)
     Chainsaw.initItem(petrolCan, Chainsaw.petrolCanFuel)
 
     print("Chainsaw.addChainsaw: init'd chainsaw and petrol can")
-  end
-
-  if keyPressed == Keyboard.KEY_HOME then
-
+  elseif keyPressed == Keyboard.KEY_HOME then
+    print("Chainsaw.addChainsaw: HOME key pressed")
+  else
+    print("Chainsaw.addChainsaw: Key pressed = " .. keyPressed)
+    print("Chainsaw.addChainsaw: type of Keyboard is " .. type(Keyboard))
+    print("Chainsaw.addChainsaw: type of Keyboard.KEY_INSERT is " ..
+          type(Keyboard.KEY_INSERT))
   end
 end
 
@@ -201,7 +185,7 @@ Chainsaw.hasAgeName = function(item)
 end
 
 Chainsaw.getNameAge = function(item)
-  return string.match(item:getName(), "%[(%d+)%]")
+  return tonumber(string.match(item:getName(), "%[(%d+)%]"))
 end
 
 Chainsaw.setAgeName = function(item)
@@ -321,20 +305,33 @@ Chainsaw.isPetrolCanEmpty = function(petrolCan)
   return petrolCan:getAge() <= 0
 end
 
-Chainsaw.getPetrolCansNotEmpty = function(player)
+Chainsaw.getPetrolCans = function(player)
+
   playerItems = player:getInventory():getItems()
   local petrolCans = {}
 
 	for i = 0, playerItems:size() - 1 do
 		local item = playerItems:get(i);
 
-    if Chainsaw.isPetrolCan(item) and
-      not Chainsaw.isPetrolCanEmpty(item) then
+    if Chainsaw.isPetrolCan(item) then
       table.insert(petrolCans, item)
     end
   end
 
   return petrolCans
+end
+
+Chainsaw.getPetrolCansNotEmpty = function(player)
+  local petrolCans = Chainsaw.getPetrolCans(player)
+  local petrolCansNotEmpty = {}
+
+  for _, petrolCan in pairs(petrolCans) do
+    if not Chainsaw.isPetrolCanEmpty(petrolCan) then
+      table.insert(petrolCansNotEmpty, petrolCan)
+    end
+  end
+
+  return petrolCansNotEmpty
 end
 
 Chainsaw.fillChainsaw = function(player, chainsaw, petrolCan)
@@ -458,8 +455,4 @@ end
 Events.OnKeyPressed.Add(Chainsaw.addChainsaw)
 Events.OnEquipPrimary.Add(Chainsaw.onEquipPrimary)
 Events.OnTick.Add(Chainsaw.onTick)
-Events.OnGameBoot.Add(Chainsaw.OnGameBoot)
-Events.OnGameStart.Add(Chainsaw.OnGameStart)
-Events.OnGameTimeLoaded.Add(Chainsaw.OnGameTimeLoaded)
 Events.OnLoad.Add(Chainsaw.OnLoad)
-Events.OnCreatePlayer.Add(Chainsaw.OnCreatePlayer)
