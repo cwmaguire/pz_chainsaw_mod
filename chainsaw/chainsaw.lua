@@ -438,7 +438,7 @@ Chainsaw.use = function()
     chainsaw = player:getPrimaryHandItem()
     chainsaw:setAge(chainsaw:getAge() - 1.0)
     Chainsaw.setAgeName(chainsaw)
-    print("\"Using\" Chainsaw (lowering age)" .. chainsaw:getAge())
+    print("Chainsaw.use: \"Using\" Chainsaw (lowering age)" .. chainsaw:getAge())
   end
 end
 

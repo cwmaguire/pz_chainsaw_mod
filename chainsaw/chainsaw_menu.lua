@@ -21,20 +21,20 @@ ChainsawMenu.doChainsawMenu = function(playerNum, context, worldObjects)
   equippedChainsaw, chainsaws = Chainsaw.getChainsawsNotFull(player)
 
   if not equippedChainsaw and #chainsaws == 0 then
-    print("No equipped chainsaw or inventory chainsaws")
+    print("ChainsawMenu.doChainsawMenu: No equipped chainsaw or inventory chainsaws")
     return
   end
 
   petrolCans = Chainsaw.getPetrolCansNotEmpty(player)
 
   if #petrolCans == 0 then
-    print("No petrol cans in inventory")
+    print("ChainsawMenu.doChainsawMenu: No petrol cans in inventory")
     return
   end
 
   local fillText = "Fill " .. Chainsaw.chainsawName .. "..."
   local fillOption = context:addOption(fillText, worldObjects, nil)
-  print("Created fill menu: " .. fillText)
+  print("ChainsawMenu.doChainsawMenu: Created fill menu: " .. fillText)
 
   local chainsawMenu = ISContextMenu:getNew(context)
   context:addSubMenu(fillOption, chainsawMenu)
