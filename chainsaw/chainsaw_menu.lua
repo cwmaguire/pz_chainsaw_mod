@@ -27,7 +27,7 @@ ChainsawMenu.doChainsawMenu = function(playerNum, context, worldObjects)
 
   petrolCans = Chainsaw.getPetrolCansNotEmpty(player)
 
-  if #petrolCans == 0 then
+  if not petrolCans or #petrolCans == 0 then
     print("ChainsawMenu.doChainsawMenu: No petrol cans in inventory")
     return
   end
@@ -46,7 +46,7 @@ ChainsawMenu.doChainsawMenu = function(playerNum, context, worldObjects)
     local equipFuelMenu = ISContextMenu:getNew(chainsawMenu)
     chainsawMenu:addSubMenu(equipChainOption, equipFuelMenu)
 
-    ChainsawMenu.addPetrolCanMenus(equipFuelMenu, equippedChainsaw, petrolCans)
+    ChainsawMenu.addPetrolCanMenus(equipFuelMenu, player, equippedChainsaw, petrolCans)
   end
 
   if #chainsaws > 0 then
@@ -85,6 +85,16 @@ ChainsawMenu.doChainsawMenu = function(playerNum, context, worldObjects)
 end
 
 ChainsawMenu.addPetrolCanMenus = function(menuContext, player, chainsaw, petrolCans)
+
+  if not petrolCans then
+    print("ChainsawMenu.addPetrolCanMenues: petrolCans nil")
+    return
+  end
+
+  if #petrolCans == 0 then
+    print("ChainsawMenu.addPetrolCanMenues: petrolCans empty")
+  end
+
   for _, petrolCan in pairs(petrolCans) do
     local petrolCanText = petrolCan:getName()
     menuContext:addOption(petrolCanText, player, Chainsaw.fillChainsaw, chainsaw, petrolCan)
