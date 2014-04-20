@@ -325,12 +325,29 @@ Chainsaw.getPetrolCans = function(player)
 end
 
 Chainsaw.getPetrolCansNotEmpty = function(player)
+  if not player then
+    print("Chainsaw.getPetrolCansNotEmpty: player nil ... weird")
+  end
+
   local petrolCans = Chainsaw.getPetrolCans(player)
   local petrolCansNotEmpty = {}
+
+  if not petrolCans then
+    print("Chainsaw.getPetrolCansNotEmpty: petrolCans nil")
+    print("Chainsaw.getPetrolCansNotEmpty: returning empty table")
+    return petrolCansNotEmpty
+  end
+
+  if #petrolCans == 0 then
+    print("Chainsaw.getPetrolCansNotEmpty: zero non-empty petrol cans")
+  end
 
   for _, petrolCan in pairs(petrolCans) do
     if not Chainsaw.isPetrolCanEmpty(petrolCan) then
       table.insert(petrolCansNotEmpty, petrolCan)
+    else
+      print("Chainsaw.getPetrolCansNotEmpty: Not using " .. petrolCan:getName() ..
+            " with age " .. petrolCan:getAge())
     end
   end
 
