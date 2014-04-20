@@ -32,8 +32,8 @@ do
   Chainsaw.petrolCanFuel = oneHour
 end
 
-Chainsaw.OnLoad = function()
-  print("Chainsaw.OnLoad")
+Chainsaw.onLoad = function()
+  print("Chainsaw.onLoad")
   local player = getPlayer()
   Chainsaw.initInvItems(player)
 end
@@ -65,7 +65,7 @@ Chainsaw.initInvItems = function(player)
   if chainsaws then
     print("Chainsaw.initInvItems: " .. #chainsaws .. " chainsaws found")
   else
-    print("Chainsaw.initInvItems: no inventory chainsaw")
+    print("Chainsaw.initInvItems: no inventory chainsaws")
   end
 
   if equippedChainsaw then
@@ -212,12 +212,14 @@ Chainsaw.getChainsaws = function(player)
 
   if not player then
     print("Chainsaw.getChainsaws: player is nil")
+    return
   else
     print("Chainsaw.getChainsaws: player is not nil")
   end
 
   if not playerInv then
     print("Chainsaw.getChainsaws: playerInv is nil")
+    return
   else
     print("Chainsaw.getChainsaws: playerInv is not nil")
   end
@@ -408,7 +410,7 @@ end
 Chainsaw.setIsChainsawEquipped = function()
   local player = getPlayer()
   local item = player:getPrimaryHandItem()
-  if item ~= nil and Chainsaw.isChainsaw(item) then
+  if item and Chainsaw.isChainsaw(item) then
     Chainsaw.isChainsawEquipped = true
   else
     Chainsaw.isChainsawEquipped = false
@@ -420,7 +422,6 @@ Chainsaw.onEquipPrimary = function()
   Chainsaw.setIsChainsawEquipped()
   if Chainsaw.isChainsawEquipped then
     Chainsaw.tick = 0
-    Chainsaw.isChainsawEquipped = true
     Chainsaw.playIdleSound()
   end
 end
@@ -456,4 +457,4 @@ end
 Events.OnKeyPressed.Add(Chainsaw.addChainsaw)
 Events.OnEquipPrimary.Add(Chainsaw.onEquipPrimary)
 Events.OnTick.Add(Chainsaw.onTick)
-Events.OnLoad.Add(Chainsaw.OnLoad)
+Events.OnLoad.Add(Chainsaw.onLoad)
