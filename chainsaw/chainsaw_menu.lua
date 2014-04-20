@@ -8,12 +8,12 @@
 
 require 'chainsaw/chainsaw.lua'
 
-ChainsawMenu = {};
+ChainsawMenu = {}
 
 ChainsawMenu.doChainsawMenu = function(playerNum, context, worldObjects)
   print("Chainsaw menu")
   local player = getSpecificPlayer(playerNum)
-  local playerInv = player:getInventory();
+  local playerInv = player:getInventory()
   local equippedChainsaw
   local chainsaws
   local petrolCans
@@ -97,9 +97,9 @@ ChainsawMenu.addPetrolCanMenus = function(menuContext, player, chainsaw, petrolC
 
   for _, petrolCan in pairs(petrolCans) do
     local petrolCanText = petrolCan:getName()
-    menuContext:addOption(petrolCanText, player, Chainsaw.fillChainsaw, chainsaw, petrolCan)
+    menuContext:addOption(petrolCanText, player, Chainsaw.fillChainsawTimedAction, chainsaw, petrolCan)
   end
 end
 
-Events.OnFillWorldObjectContextMenu.Add(ChainsawMenu.doChainsawMenu);
-Events.OnFillInventoryObjectContextMenu.Add(ChainsawMenu.doChainsawMenu);
+Events.OnFillWorldObjectContextMenu.Add(ChainsawMenu.doChainsawMenu)
+Events.OnFillInventoryObjectContextMenu.Add(ChainsawMenu.doChainsawMenu)

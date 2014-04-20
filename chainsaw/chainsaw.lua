@@ -20,7 +20,8 @@
 require 'chainsaw/chainsaw_util.lua'
 
 Chainsaw = {}
-Chainsaw.tick = 0;
+Chainsaw.tick = 0
+Chainsaw.chainsawFillTime = 30
 Chainsaw.chainsawName = "Chainsaw"
 Chainsaw.petrolCanName = "Gas Can"
 
@@ -314,7 +315,7 @@ Chainsaw.getPetrolCans = function(player)
   local petrolCans = {}
 
 	for i = 0, playerItems:size() - 1 do
-		local item = playerItems:get(i);
+		local item = playerItems:get(i)
 
     if Chainsaw.isPetrolCan(item) then
       table.insert(petrolCans, item)
@@ -352,6 +353,16 @@ Chainsaw.getPetrolCansNotEmpty = function(player)
   end
 
   return petrolCansNotEmpty
+end
+
+Chainsaw.fillChainsawTimedAction = function(player, chainsaw, petrolCan)
+  local action = FillChainsawAction:new(player, chainsaw, petrolCan, Chainsaw.chainsawFillTime)
+  if action.player then
+    print("Chainsaw.fillChainsawTimedAction:Action has player: " .. player:Forname())
+  else
+    print("Chainsaw.fillChainsawTimedAction: action has nil player")
+  end
+  ISTimedActionQueue.add(action)
 end
 
 Chainsaw.fillChainsaw = function(player, chainsaw, petrolCan)
