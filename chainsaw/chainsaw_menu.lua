@@ -92,3 +92,4 @@ ChainsawMenu.addPetrolCanMenus = function(menuContext, player, chainsaw, petrolC
 end
 
 Events.OnFillWorldObjectContextMenu.Add(ChainsawMenu.doChainsawMenu);
+Events.OnFillInventoryObjectContextMenu.Add(ChainsawMenu.doChainsawMenu);
