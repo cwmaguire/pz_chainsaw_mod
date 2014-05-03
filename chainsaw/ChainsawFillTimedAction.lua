@@ -25,7 +25,12 @@ function FillChainsawAction:stop()
 end
 
 function FillChainsawAction:perform()
-	Chainsaw.fillChainsaw(o.player, o.chainsaw, o.petrolCan)
+  if self then
+    print("ChainsawFillTimedAction.perform(self): self is not nil")
+  else
+    print("ChainsawFillTimedAction.perform(self): self is nil")
+  end
+	Chainsaw.fillChainsaw(self.player, self.chainsaw, self.petrolCan)
   FillChainsawAction.removeFromQueueStartNext(self)
 end
 
@@ -33,7 +38,7 @@ FillChainsawAction.removeFromQueueStartNext = function(action)
   ISBaseTimedAction.perform(action)
 end
 
-function FillChainsawAction:new(player, chainsaw, petrolCan, time)
+function FillChainsawAction:new(character, chainsaw, petrolCan, time)
 	local o = {}
 	setmetatable(o, self)
   -- TODO See if we can do this on module load
@@ -41,7 +46,7 @@ function FillChainsawAction:new(player, chainsaw, petrolCan, time)
   --      up the FillChainsawAction as a metatable over
   --      and over again
 	self.__index = self
-	o.player = player
+	o.character = character
   o.chainsaw = chainsaw
   o.petrolCan = petrolCan
 	o.stopOnWalk = false
