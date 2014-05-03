@@ -356,12 +356,10 @@ Chainsaw.getPetrolCansNotEmpty = function(player)
 end
 
 Chainsaw.fillChainsawTimedAction = function(player, chainsaw, petrolCan)
-  local action = FillChainsawAction:new(player, chainsaw, petrolCan, Chainsaw.chainsawFillTime)
-  if action.player then
-    print("Chainsaw.fillChainsawTimedAction:Action has player: " .. player:Forname())
-  else
-    print("Chainsaw.fillChainsawTimedAction: action has nil player")
+  if player then
+    print("Chainsaw.fillChainsawTimedAction: player/character is not nil")
   end
+  local action = FillChainsawAction:new(player, chainsaw, petrolCan, Chainsaw.chainsawFillTime)
   ISTimedActionQueue.add(action)
 end
 
